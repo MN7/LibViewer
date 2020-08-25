@@ -14,5 +14,6 @@
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix ./client/libviewer && npm run build --prefix ./client/libviewer",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "homepage": ""
 }

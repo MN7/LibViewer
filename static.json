@@ -1,0 +1,6 @@
+{
+  "root": "client/libviewer/build/",
+  "routes": {
+    "/**": "index.html"
+  }
+}
