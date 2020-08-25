@@ -11,7 +11,33 @@ class Viewinfo extends Component {
 
   constructor(props) {
     super(props);
-    this.state = [];
+    this.state = {
+      loading: false,
+      loaded: false
+    };
+  }
+
+  componentDidMount() {
+    console.log("comp mount bgn");
+    this.setState({loaded: false}); // to ensure data is loaded when component mounts
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+    const targetUrl = "https://prosentient.intersearch.com.au/cgi-bin/koha/svc/report?id=2&annotated=1"
+    this.getKohaJSON(proxyUrl+targetUrl);
+  }
+
+  getKohaJSON = async (url) => {
+    console.log("trying fetch now");
+    this.setState({"loading": true});
+    fetch(url, { method: "GET" })
+      .then(res => {this.setState({"loading":false});
+// console.log("response received: "+res);
+      return res.json();})
+      .then(json => {if (json.success) this.parseKohaJSON(json); })
+      .catch((err) => {console.log("Koha JSON info not fetched. Error: "+err)})
+  }
+
+  parseKohaJSON = (rawJSON) => {
+    console.log("abt to parse rawJSON: "+rawJSON);
   }
 
   createData = (name, calories, fat, carbs, protein) => {
@@ -37,7 +63,7 @@ class Viewinfo extends Component {
         <div className="vi-header">
           <h2>View JSON info from Koha</h2>
         </div>
-        <p className="vi-intro">
+        <div className="vi-intro">
           <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                   <TableHead>
@@ -64,7 +90,7 @@ class Viewinfo extends Component {
                   </TableBody>
                 </Table>
               </TableContainer>
-        </p>
+        </div>
       </div>
     );
   }
