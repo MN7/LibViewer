@@ -6,6 +6,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class Viewinfo extends Component {
 
@@ -47,7 +49,6 @@ console.log("response received: "+res);
       })
     ];
     this.setState({libdata: temp, loaded: true});
-alert("exit parseKohaJSON..");
   }
 
   createData = (id, title, author, year, type) => {
@@ -56,23 +57,25 @@ alert("exit parseKohaJSON..");
 
   render() {
 
-    // const dataLoaded = this.loaded;
+    const dataLoaded = this.state.loaded;
     const rows = [
       ...this.state.libdata
     ];
 
-    // const createData = this.createData;
-    // createData( 111, 'Frozen yoghurt', "abcd", 1924, "Paperback"),
-    // createData( 111, 'Test book 002', "pqrs", 2014, "Kindle"),
-
-    //       <Table className={classes.table} aria-label="simple table">
-
     return (
       <div className="viewinfo">
         <div className="vi-header">
-          <h2>View JSON info from Koha</h2>
+          <Grid container direction="row" justify="center" alignItems="center" spacing={2}>
+            <Grid item xs={3}>
+              <img src={require("../../public/LibViewer.svg")} alt="Lib Viewer Logo" width="20%" height="20%"
+                align="right" />
+            </Grid>
+            <Grid item xs={6}>
+              <h2>View JSON info from Koha</h2>
+            </Grid>
+          </Grid>
         </div>
-        { this.state.loaded ?
+        { dataLoaded ?
           <div className="vi-intro">
             <TableContainer component={Paper}>
                   <Table aria-label="simple table">
@@ -100,7 +103,17 @@ alert("exit parseKohaJSON..");
                 </TableContainer>
           </div>
           :
-          <div> <p> Data is being loaded from Koha JSON. Please wait. </p> </div>
+          <div>
+            <Grid container direction="column" justify="flex-end" alignItems="center" paddingTop="3%">
+              <Grid item xs={6}>
+                <p> Data is being loaded from Koha JSON. Please wait. </p>
+              </Grid>
+              <Grid item xs={3}>
+                <CircularProgress color="secondary" width="30%" height="30%"
+                  />
+              </Grid>
+            </Grid>
+          </div>
         }
 
       </div>
