@@ -21,7 +21,7 @@ class Viewinfo extends Component {
     console.log("comp mount bgn");
     this.setState({loaded: false}); // to ensure data is loaded when component mounts
     const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-    const targetUrl = "https://prosentient.intersearch.com.au/cgi-bin/koha/svc/report?id=2&annotated=1"
+    const targetUrl = "https://prosentient.intersearch.com.au/cgi-bin/koha/svc/report?id=2&annotated=1";
     this.getKohaJSON(proxyUrl+targetUrl);
   }
 
@@ -30,14 +30,21 @@ class Viewinfo extends Component {
     this.setState({"loading": true});
     fetch(url, { method: "GET" })
       .then(res => {this.setState({"loading":false});
-// console.log("response received: "+res);
+console.log("response received: "+res);
       return res.json();})
-      .then(json => {if (json.success) this.parseKohaJSON(json); })
+      .then(json => {this.parseKohaJSON(json);})
       .catch((err) => {console.log("Koha JSON info not fetched. Error: "+err)})
   }
 
   parseKohaJSON = (rawJSON) => {
-    console.log("abt to parse rawJSON: "+rawJSON);
+    console.log("typeof rawJSON: "+typeof rawJSON);
+    const temp =
+    rawJSON.map((x) => {
+      console.log(typeof x+" "+JSON.stringify(x));
+      return x.title;
+    });
+    this.setState({tmp: temp});
+alert("exit parseKohaJSON.. tiles: "+temp);
   }
 
   createData = (name, calories, fat, carbs, protein) => {
