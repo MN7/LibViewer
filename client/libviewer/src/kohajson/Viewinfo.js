@@ -49,7 +49,7 @@ class Viewinfo extends Component {
   parseKohaJSON = (rawJSON) => {
     let m = new Map(), i=0;
     const temp = [...rawJSON.map((x) => {
-        const book=this.createData(x.biblionumber, x.title, x.author, x.copyrightdate, x.type, x.isbn, x.subjects);
+        const book=this.createData(x.biblionumber, x.title, x.author, x.copyrightdate, x.type, x.isbn, x.Subjects);
         if (!m.has(book.id)) m.set(book.id, i++);
         return book;
       })
@@ -58,6 +58,7 @@ class Viewinfo extends Component {
   }
 
   createData = (id, title, author, year, type, isbn, subjects) => {
+    // if (subjects !== undefined) console.log("id: "+id+" subjects: "+JSON.stringify(subjects));
     return { id, title, author, year, type, isbn, subjects };
   }
 
@@ -72,11 +73,10 @@ class Viewinfo extends Component {
   showDetails = (id) => {
     if (id===-1) this.setState({rtid: -1, rowDetail: {prev: this.state.rowDetail.curr, curr:-1} });
     else {
-      const trd={prev: this.state.rowDetail.curr, curr:this.state.idmap.get(id)};
-      this.setState({rowDetail: trd});
       if (this.state.rtid!==-1) clearTimeout(this.state.rtid);
-      let nxrtid=setTimeout(()=>{this.showDetails(-1) }, 12000)
-      this.setState({rtid: nxrtid});
+      const trd={prev: this.state.rowDetail.curr, curr:this.state.idmap.get(id)};
+      const nxrtid=setTimeout(()=>{this.showDetails(-1) }, 12000)
+      this.setState({rtid: nxrtid, rowDetail: trd});
     }
     // setTimeout(()=>{ }, 15000);
   }
@@ -86,7 +86,6 @@ class Viewinfo extends Component {
     const dataLoaded = this.state.loaded, viewSimple = this.state.viewSimple;
     const page = this.state.page, rowsPerPage = this.state.rowsPerPage;
     const idx=this.state.rowDetail.curr;
-    console.log("invoked render with idx: "+idx);
     const rows = [
       ...this.state.libdata
     ];
@@ -112,7 +111,7 @@ class Viewinfo extends Component {
           { idx === -1 ?
             <br/>
             :
-            <BookDetails book={book} />
+            <BookDetails book={book} showDetails={this.showDetails} />
           }
         </div>
         { dataLoaded && viewSimple ?
